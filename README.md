@@ -1,49 +1,24 @@
-## Lecture-1
+# 프론트엔드 최적화 강의 노트
 
-'실전으로 배우는 웹 성능 최적화 for 리액트' 1번째 강의 소스입니다.
+## part 1
 
-### 실행
+### 1. 블로그 사이트 최적화
 
-1. download sources
+### 1 lighthouse
 
-```
-$ git clone https://github.com/performance-lecture/lecture-1.git
-```
+**Categories** 검사할 항목 선택
 
-2. install dependencies
+**Device** 검사할 장치 환경 선택
 
-```
-$ npm install
-or
-$ yarn
-```
+**Generate report** 검사 시작
 
-3. start development server
+> 퍼포먼스, 베스트오브 프랙티스가 뭔 뜻일까?
 
-```
-$ npm run start
-or
-$ yarn start
-```
 
-4. start json-server
+**opportunities** -> 리소스 관점. 로딩 성능 최적화
 
-```
-$ npm run server
-or
-$ yarn server
-```
+**diagnostics** -> 실행 관점. 렌더링 성능 최적화
 
-(위의 server start와 다른 콘솔에서 띄워줍니다.)
+빨간색 항목은 반드시 고쳐야 할 것. 회색은 치명적이진 않지만 살펴보면 좋을 것.
 
-5. build + serve
-
-```
-$ npm run serve
-or
-$ yarn serve
-```
-
-### 질문
-
-궁금하신 부분은 강의 내 질문 & 답변 게시판을 이용해주시길 바랍니다.
+**Runtime Setting** -> 검사 시 사용한 세팅
