@@ -8,7 +8,7 @@ function zeroPad(value, len) {
 }
 
 /* 파라미터 참고: https://unsplash.com/documentation#supported-parameters */
-function getParametersForUnsplash({width, height, quality, format}) {
+function getParametersForUnsplash({ width, height, quality, format }) {
   return `?w=${width}&h=${height}&q=${quality}&fm=${format}&fit=crop`
 }
 
@@ -52,7 +52,7 @@ function Article(props) {
         </div>
       </div>
       <div className={'Article__thumbnail'}>
-        <img src={props.image + getParametersForUnsplash({width: 1200, height: 1200, quality: 80, format: 'jpg'})} alt="thumbnail" />
+        <img src={props.image + getParametersForUnsplash({ width: 240, height: 240, quality: 80, format: 'jpg' })} alt="thumbnail" />
       </div>
     </div>
   )
