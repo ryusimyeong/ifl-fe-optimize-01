@@ -44,3 +44,37 @@ imageCDN_URL?src=[이미지ㅕURL]width&height
 직접 구축해도 되지만 imgix 라는 이미지 CDN 솔루션이 있다.
 
 즉, 이미지를 화면에 나타낼 때는 필요한 크기 만큼, 혹은 그것에 두 배정도 곱한 만큼만 나타내야 한다. 이미지가 static이라면 이미지 크기 자체를 줄여서 업로드할 수 있고, 동적으로 가져오는 거라면 imageCDN 을 사용할 수 있다.
+
+### 1-6) bottleneck
+
+minify Javascript -> 자바스크립트 코드 중에 공백이나 주석을 제거해서 불필요한 부분을 제거해라
+
+preconnent to required origins -> 건너 뛰어?
+
+
+
+
+diagnotics 
+
+minimize main-thread work -> 메인 스레드 작업을 줄여라.
+
+serve static with cache policy -> 캐시를 이용해라.
+
+Reduce Javascript execution time -> 자바스크립트 실행 시간을 줄여라.
+
+어떤 코드가 문제를 일으켰는지 알 수는 없다. -> 개발자도구 performance 탭을 확인해야 함
+
+퍼포먼스 -> 화면이 로드되면서 
+
+api 뒤에 길게 그려져 있는 꼬리는 콜백
+
+minor gc -> 가비지 컬렉터의 작업 -> 메모리가 없을 때 필요없는 거 제거
+
+현재 느린 건 Article 컴포넌트에 removeSpecialCharacter 라는 함수..
+
+performance 탭에 들어가서 로드를 많이 잡아먹는 컴포넌트를 확인한다.
+
+퍼포먼스 탭은 추후 반드시 공부해야겠다.
+
+Article 컴포넌트의 removeCharacter 라는 함수가 원인
+
