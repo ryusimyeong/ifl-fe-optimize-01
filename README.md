@@ -113,4 +113,109 @@ refractor가 엄청난 크기를 차지하고 있다. 근데 view 페이지에�
 필요할 때만 로드하면 된다.
 ```
 번들 애널라이저를 통해 어떤 모듈이 크기를 많이 차지 하고 있는지 확인한 다음 해당 모듈이 어디서 어떻게 사용되는지 파악하고, 필요한 부분에서만 로드될 수 있게 처리한다.
-``
+```
+
+### 1-9) code-spliting & lazy-load
+
+코드스플리팅이란?
+
+-> 코드를 분할하는 것. 덩치가 큰 번들 파일을 쪼개서 작은 파일들로 만드는 것.
+
+List 페이지와 View 페이지 컴포넌트로 이루어져있다. 각각 페이지에는 필요한 모듈이 있다. 그런데 이 둘을 묶고 있는 번들 파일이 하나다 보니 List 를 볼 떄 필요없는 View의 모듈도 로드한다. 불필요하게 로드하니까 로딩이 느려진다.
+
+즉, 번들 파일을 쪼개서 필요한 것만 받는 것.
+
+코드스플리팅은 크게 페이지 별로 쪼갤 수도 있고, 모듈 별로 쪼갤 수도 있다. 어떤 방식으ㅗ 하든, 불필요, 중복되는 코드 없이 적절한 사이즈의 코드가 적절한 타이망에 로드되는 게 중요하다.
+
+[코드분할](https://ko.reactjs.org/docs/code-splitting.html)
+
+-> 여기선 Route-based code splitting 
+
+```jsx
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+// 컴포넌트를 동적으로 import하고 그걸 lazy라는 함수로 감싸준다.
+// 그러면 Route에 할당된 path에 접근할 때만 해당 컴포넌트가 로드된다.
+// Suspense 는 동적으로 컴포넌트들이 로드되다보니 어떤 컴포넌트도 로드되지 않는 순간이 있을 수 있다. 그 때 에러를 내지 않고 Suspense내에 정의된 걸 나타낸다.
+const Home = lazy(() => import('./routes/Home'));
+const About = lazy(() => import('./routes/About'));
+
+const App = () => (
+  <Router>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
+        <Route exact path="/" component={Home}/>
+        <Route path="/about" component={About}/>
+      </Switch>
+    </Suspense>
+  </Router>
+);
+```
+코드 스플리팅을 나누는 주체가 [webpack](https://webpack.js.org/guides/code-splitting/) 가이드를 봐야하지만, CRA로 만든 앱은 그냥 만든다.
+
+App.js (페이지 컴포넌트를 불러오는 부분)에 처리를 마치고 다시 번들 애널라이저를 돌려보면
+
+청크 파일이 두 개가 되어있다. 
+
+### 1-10 텍스트 압축 적용
+
+프로덕션 환경과 개발환경은 조금의 차이가 있다. build 해서 프로덕션 환경에서의 기능을 보자.
+
+즉, 프로덕션 환경에서도 검사, 조치가 필요하다.
+
+그런데 프로덕션 환경에서는 Enable text compression 이라는 항목이 라이트하우스에 나온다.(아포츄너티)
+
+웹페이지를 로드할 때는 그를 위한 리소스를 다운 받게 된다.
+
+이 리소스들의 크기가 클수록 다운로드 속도가 느려진다.
+
+이 리소스들의 크기를 줄이는 게 코드 스플리팅, 이미지 CDN, 텍스트 압축
+
+개발자도구 -> network -> 컴포넌트의 header 탭 -> content-encoding 확인.
+
+content-encoding 이 gZip으로 나오면 텍스트 압축을 한다.
+
+## 텍스트 압축 알고리즘
+
+GZIP -> 내부적으로 DEFLATE를 사용한다. DEFLATE보다 더 성능이 좋다.
+DEFLATE -> LZ77이라는 알고리즘을 이용
+
+이 압축은 서버에서 해주는 것이다. 리액트가 아닌 serve.js를 살펴보자.
+
+```
+"serve": "npm run build && node ./node_modules/serve/bin/serve.js -u -s build",
+```
+
+-u , -s 는 무슨 옵션이지?
+
+```
+node ./node_modules/serve/bin/serve.js --help
+```
+
+로 확인.
+
+-u 는 no compression, -s single
+
+이 -u를 없애주면 됨.
+
+텍스트 압축은 서버에서 해주는 것. 서버가 여러 대일 경우 그 서버들이 통하는 라우터에 텍스트 압축 코드를 집어넣기도 한다.
+
+그런데, 서버에서 압축을 해주면 클라이언트에서 압축을 풀어야 한다. 무분별하게 압축하면 느려진다.
+
+파일의 크기가 2kb 이상이면 압축이 되고, 그 미만이면 되지 않는다. 
+
+빌드할 때 텍스트 압축 옵션 등이 적용되어 있는지 살펴보자.
+
+### 1강 요약 정리
+
+라이트하우스로 검사
+
+이미지 사이즈 최적화 -> 이미지를 불러올 때 적절한 사이즈로 불러온다.
+
+보틀넥 코드 최적화 -> 퍼포먼스탭을 이용해서 지나치게 느린 함수를 찾아내 개선
+
+코드 스플리팅 -> 번들 애널라이저를 이용한 뒤 번들 파일을 분석한 뒤 코드 스플리팅. 
+
+텍스트 압축 -> 서비스를 배포할 때, build 단계에서 텍스트 압축(content-encoding)을 이용해서 처리한다. (옵션 수정)
+
