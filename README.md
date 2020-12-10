@@ -83,3 +83,34 @@ Article 컴포넌트의 removeCharacter 라는 함수가 원인
 썸네일용 텍스트여서 300자 정도만 있으면 되는데 최장 9만 자를 모두 검사하고 있다. -> substring 등의 메소드를 이용해서 필요한 만큼만 잘라서 검사한다.
 
 performance 탭을 이용해서 bottleneck 코드를 확인하고, 해당 코드를 적절한 방법을 찾아 수정한다.
+
+### 1-8) bundle 파일 분석. 
+
+번들 파일을 분석하고 코드를 분할하자.
+
+자바스크립트 파일이 크면 -> 자바스크립트가 모두 다운로드 된다음 화면이 렌더링되기 때문에 그만큼 화면이 늦게 나온다.
+
+분석 툴 -> webpack bundle analyzer
+
+```shell
+$ npm i -D webpack-bundle-analyzer
+```
+
+설치 후 webpack.config 수정해야함
+
+CRA를 이용한 프로젝트이기 때문에 webpack.config를 직접 수정할 수 없음.
+
+cra-bundle-analyzer 를 이용한다.
+
+```shell
+$ npm i -D cra-bundle-analyzer
+```
+
+package.lock -> 우리가 사용하고 있는 모듈의 하위 디펜던시를 나타낸다.
+
+refractor가 엄청난 크기를 차지하고 있다. 근데 view 페이지에서만 사용되기 때문에 List에서는 로드할 필요 없음.
+
+필요할 때만 로드하면 된다.
+```
+번들 애널라이저를 통해 어떤 모듈이 크기를 많이 차지 하고 있는지 확인한 다음 해당 모듈이 어디서 어떻게 사용되는지 파악하고, 필요한 부분에서만 로드될 수 있게 처리한다.
+``
