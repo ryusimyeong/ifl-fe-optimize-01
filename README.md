@@ -219,7 +219,7 @@ node ./node_modules/serve/bin/serve.js --help
 
 텍스트 압축 -> 서비스를 배포할 때, build 단계에서 텍스트 압축(content-encoding)을 이용해서 처리한다. (옵션 수정)
 
-
+# 2강 시작
 
 애니메이션 최적화 reflow repaing - 렌더링 최적화
 
