@@ -228,3 +228,61 @@ node ./node_modules/serve/bin/serve.js --help
 컴포넌트 프리로딩 - 로딩 성능 최적화
 
 이미지 프리로딩 - 로딩 성능 최적화
+
+브라우저에서 애니메이션은 어떻게 작동할까
+
+**쟁크 현상**
+
+일반적으로 모니터의 주사율은 1초당 60개 화면을 보여줌, (60FPS 60프레임), 브라우져도 1초에 60개를 보여주려한다 
+
+이때 브라우져가 60개를 못보여주고 1초에 20개, 30개 정도만 보여준다면 애니메이션은 버벅거리게 되고, 이 현상을 쟁크 현상이라고 한다.
+
+그럼 왜 브라우져는 60게를 못 그릴까?
+
+**브라우져 렌더링 과정**
+
+HTML + CSS + JS 다운로드 -> DOM + CSSOM 변환 -> Render Tree 로 만들고 -> Layout -> Paint -> Composite
+
+DOM 은HTML 요소를 tree 구조로 만든 것이고 CSSOM 은 스타일 요소들을  tree 구조로 만든 것이다.
+
+이 두 가지를 조합해서 최종적으로 Render Tree를 만든다. 
+
+Layout은 요소의 위치와 크기 등을 계산한다.
+
+그 Layout 위에 색을 칠한다 (배경색상이나 그림자, 글자 색 등) (Paint)
+
+Composite -> 각 레이어를 합성한다. 
+
+이 일련의 과정을 Critical Rendering Path, 혹은 Pixel Pipeline이라고 한다.
+
+화면이 변하면 이 과정을 처음부터 다시 수행하는데, 1초에 60번씩 보여주려니까 브라우져가 힘들어 하는 것
+
+performance 탭에 timings 는 실행된 함수를 보여준다.
+
+main tab을 보면 이 픽셀 파이프라인을 볼 수 있다. 점선은 화면이 나타나야 하는 시점이다. composite가 이 점선 전에 완료되어야 정상이다.
+
+그럼 브라우져에게 부담을 적게 주는 방법은? 
+
+layout과 paint 과정을 건너 뛴다.
+
+**Reflow**
+
+위치와 크기에 관여하는 요소
+
+width나 height처럼 크기, 위치가 변경? 모두 재실행된다. 이걸 REFLOW
+
+
+**Repaint**
+
+outline 등 색상에 관여하는 요소
+
+color나 background-color 같이 색상이 변경되면? layout 과정 생략
+
+**GPU의 도움을 받아서 Reflow, Repaint 피하기**
+
+transform, opacity 가 변경 -> layout, paint 생략
+
+transform, opacity GPU가 관여할 수 있는 속성 -> 이건 GPU가 직접 데이터를 가공해서 composite로 넘긴다.
+
+
+즉, 애니메이션을 쓸 때는 transform, opacity를 이용 > 색상 요소 > 위치와 크기에 관여하는 요소를 사용하면 된다.
