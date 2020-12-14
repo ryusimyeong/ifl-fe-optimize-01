@@ -303,3 +303,13 @@ transform-origin 으로 위치 기준을 잡아주고
 width의 변화를 감지하고 있는 transition을 transform으로 바꿔준다.
 
 performance 탭으로 가보면 FPS가 60으로 균일해지고 CPU의 작업량이 줄어든 것을 확인할 수 있다.
+
+### 2-5) 코드 스플리팅과 페이지 내 컴포넌트 레이지 로드
+
+cra-bundle-analyzer를 이용해서 분석
+
+어떤 모듈이 언제 어떻게 필요한지 파악해서 그 시점에 맞게 나눠준다.
+
+react-image-gallery는 모달이 떴을 때만 사용되면 되기 때문에 분할해준다.
+
+어떤 모듈이 언제 필요한지 파악하는 게 제일 중요함.
