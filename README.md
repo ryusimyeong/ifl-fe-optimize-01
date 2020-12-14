@@ -284,5 +284,22 @@ transform, opacity 가 변경 -> layout, paint 생략
 
 transform, opacity GPU가 관여할 수 있는 속성 -> 이건 GPU가 직접 데이터를 가공해서 composite로 넘긴다.
 
-
 즉, 애니메이션을 쓸 때는 transform, opacity를 이용 > 색상 요소 > 위치와 크기에 관여하는 요소를 사용하면 된다.
+
+### 2-4) 애니메이션 최적화
+
+repaint 속성에는 가로를 바꿀 수 있는 게 없으니 transform을 사용한다.
+
+https://developer.mozilla.org/ko/docs/Web/CSS/transform
+
+transform의 scaleX를 사용하면 가로의 길이를 변화시킬 수 있다.
+
+components / Bar 로 간다.
+
+scale은 크기의 기준이 가운데다. 좌 혹은 오른쪽부터 그래프가 시작되길 원하면 다른 옵션이 필요하다.
+
+transform-origin 으로 위치 기준을 잡아주고
+
+width의 변화를 감지하고 있는 transition을 transform으로 바꿔준다.
+
+performance 탭으로 가보면 FPS가 60으로 균일해지고 CPU의 작업량이 줄어든 것을 확인할 수 있다.
