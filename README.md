@@ -367,3 +367,62 @@ network tab에 가서 해당 이미지를 클릭해보면 headers 탭에 cache-c
 컴포넌트 preload (lazy load 단점 극복: 나눠진 코드가 로드 시간이 느려짐)
 
 이미지 preload (new Image()를 이용해서 contents preload)
+
+## chrome dev tools performance 패널
+
+웹페이지의 런타임 성능 분석
+
+녹화를 누른 순간부터 정지를 누른 순간까지의 성능을 측정
+
+새로고침 버튼은 페이지 로드가 시작 ~ 끝날 때까지 성능 측정
+
+profile load/save 성능 측정 결과저장 및 불러오기 가능
+
+screenshot -> 화면의 변화를 스크린샷으로 찍어서 보여줌
+
+memory -> 화면 구동 시 메모리가 어떻게 사용되고 있는지 보여줌
+
+GC -> 가비지 콜렉터를 실행시킴
+
+옵션
+1. disable javascript sample -> 시스템이 실행시키는 자질구레한 자바스크립트 실행을 보여주지 않음
+2. enable advanced paint instrumentation -> 화면 페인트 (paint, composite 등)의 과정을 더 자세히 보여줌
+3. network : 네트워크 속도 느리게
+4. CPU: CPU 성능 느리게
+
+
+맨위 영역 
+
+**타임라인** -> 노란색, 자바스크립트.. 보라색, 레이아웃... 초록색, 페인트or컴포짓
+
+네트워크 영역
+
+네트워크의 요청 순서 언제 받았고 처리되었는지
+
+**네트워크** 탭 내에서 실선 -> 회색 -> 진회색 -> 실선으로 이루어진 요소를 확인할 수 있는데 각각 네트워크 연결 준비, 네트워크 요청, 요청 후 내용 다운로드, 내용 처리 시간을 뜻한다.
+
+프레임부터 CPU가 처리한 걸 보여준다.
+
+**프레임**은 스크린샷
+
+**타이밍** 크롬에서 측정하는 시간 기준으로 활동 보여준다.
+
+DCL -> DOM contents loading
+
+FP -> FirstPaint
+
+**메인**
+
+자바스크립트 활동을 보여주기 때문에 가장 중요
+
+**래스터** 쓰레드부터는 그냥 그럼
+
+아래 써머리는 main을 요약
+
+바텀업은 실행된 것의 역순으로 보여줌 calltree은 시간순
+
+
+
+enable advanced paint instrumentation c체크 후 성능 분석 -> frame 내의 그래프 하나 클릭하면 layer라는 탭이 하단에 생긴다
+
+메인영역에서 paint 부분을 클릭하면 layout 이후에 paint 작업이 어떻게 이루어졌는지 확인할 수 있다.
