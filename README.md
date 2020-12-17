@@ -1,9 +1,18 @@
 # 프론트엔드 최적화 강의 노트
-
 ## part 1
 
-### 1. 블로그 사이트 최적화
+1. 성능 분석 툴
+   1. 크롬 lighthouse
+   2. 크롬 개발자 도구 performance 탭
+   3. bundle analyzer
+2. 이미지 사이즈 최적화
+3. bottleneck 코드 최적화
+4. code spliting, lazy load, preload
+5. 텍스트 압축
+6. 애니메이션 jank 현상 최적화
+   1. Reflow, Repaint
 
+### 1. 블로그 사이트 최적화
 ### 1 lighthouse
 
 **Categories** 검사할 항목 선택
@@ -13,7 +22,6 @@
 **Generate report** 검사 시작
 
 > 퍼포먼스, 베스트오브 프랙티스가 뭔 뜻일까?
-
 
 **opportunities** -> 리소스 관점. 로딩 성능 최적화
 
@@ -50,9 +58,6 @@ imageCDN_URL?src=[이미지ㅕURL]width&height
 minify Javascript -> 자바스크립트 코드 중에 공백이나 주석을 제거해서 불필요한 부분을 제거해라
 
 preconnent to required origins -> 건너 뛰어?
-
-
-
 
 diagnotics 
 
@@ -420,8 +425,6 @@ FP -> FirstPaint
 아래 써머리는 main을 요약
 
 바텀업은 실행된 것의 역순으로 보여줌 calltree은 시간순
-
-
 
 enable advanced paint instrumentation c체크 후 성능 분석 -> frame 내의 그래프 하나 클릭하면 layer라는 탭이 하단에 생긴다
 
