@@ -268,29 +268,25 @@ main tab을 보면 이 픽셀 파이프라인을 볼 수 있다. 점선은 화�
 
 그럼 브라우져에게 부담을 적게 주는 방법은? 
 
-layout과 paint 과정을 건너 뛴다.
+layout과 paint 과정을 건너 뛴다. 즉, Reflow가 아니라 Repaint 혹은 GPU를 이용한다.
 
-**Reflow**
+1. **Reflow**
 
-위치와 크기에 관여하는 요소
+width, height 처럼 위치나 크기에 관여하는 요소가 변할 때는 layout과 paint를 포함한 브라우저 렌더링 전체 과정이 재실행 된다. 이걸 **Reflow**라고 한다.
 
-width나 height처럼 크기, 위치가 변경? 모두 재실행된다. 이걸 REFLOW
+2. **Repaint**
 
+outline, color, background-color  등 색상에 관여하는 요소가 변하면 layout은 생략되고 브라우저 렌더링이 일어난다. 이를 **Repaint**라고 한다.
 
-**Repaint**
+3. **GPU의 도움을 받아서 Reflow, Repaint 피하기**
 
-outline 등 색상에 관여하는 요소
+`transform`과 `opacity` 가 변경되면 GPU가 관여하면서 layout, paint 과정이 생략된다. 
 
-color나 background-color 같이 색상이 변경되면? layout 과정 생략
+이 두 속성이 변할 때는 GPU가 직접 데이터를 가공해서 composite과정을 거치게 된다.
 
-**GPU의 도움을 받아서 Reflow, Repaint 피하기**
+즉, 결론적으로 애니메이션 효율은 transform, opacity를 이용할 때 가장 빠르고, 그 다음은 색상이 변할 때가 빠르며 마지막으로 위치와 크기가 변할 때 가장 느리다. 
 
-transform, opacity 가 변경 -> layout, paint 생략
-
-transform, opacity GPU가 관여할 수 있는 속성 -> 이건 GPU가 직접 데이터를 가공해서 composite로 넘긴다.
-
-즉, 애니메이션을 쓸 때는 transform, opacity를 이용 > 색상 요소 > 위치와 크기에 관여하는 요소를 사용하면 된다.
-
+transform은 위치와 크기를 변동시킬 수 있고, opacity는 색상을 변경시키니 각각 상황에 따라서 사용하면 되겠다. 
 ### 2-4) 애니메이션 최적화
 
 repaint 속성에는 가로를 바꿀 수 있는 게 없으니 transform을 사용한다.
